@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
 
 const BookDetails = () => {
@@ -16,32 +16,21 @@ const BookDetails = () => {
         // User not logged in, handle the error
         return;
       }
-  
-      const shelfCollectionRef = collection(
-        db,
-        "users",
-        user.uid,
-        "shelf"
-      );
-  
-      // Check if the shelf sub-collection exists for the user
-      const shelfSnapshot = await getDocs(shelfCollectionRef); // Use getDocs() instead of get() method
-      if (shelfSnapshot.empty) {
-        // Shelf sub-collection doesn't exist, create it
-        await addDoc(shelfCollectionRef, { dummyField: "dummyValue" });
-      }
-  
-      // Add the book to the shelf sub-collection
-      await addDoc(shelfCollectionRef, { bookId });
-  
+
+      const userRef = doc(db, "users", user.uid);
+      const shelfCollectionRef = collection(userRef, "Shelf");
+
+      // Create the shelf sub-collection and add the bookId document
+      await setDoc(doc(shelfCollectionRef, bookId), { bookId });
+
       console.log("Book added to shelf successfully!");
     } catch (error) {
       console.log("Error adding book to shelf:", error);
     }
-  };  
+  };
 
   const handleAddToShelf = () => {
-    addToShelf(book.key);
+    addToShelf(id);
   };
 
   useEffect(() => {
@@ -99,9 +88,9 @@ const BookDetails = () => {
           {book.description || book.subtitle ? (
             <p>
               <strong>Description:</strong>{" "}
-              {book.description && book.description.value
+              {book.description && typeof book.description !== "string"
                 ? book.description.value.toString()
-                : book.subtitle}
+                : book.description || book.subtitle}
             </p>
           ) : null}
         </div>
