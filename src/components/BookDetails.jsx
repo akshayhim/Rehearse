@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { Snackbar } from "@mui/material";
+import { Alert } from "@mui/material";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { collection, doc, setDoc } from "firebase/firestore";
@@ -8,6 +10,11 @@ const BookDetails = () => {
   const { id } = useParams();
   const [book, setBook] = useState(null);
   const [authors, setAuthors] = useState([]);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+
+  const handleSnackbarClose = () => {
+    setIsSnackbarOpen(false);
+  };
 
   const addToShelf = async (bookId) => {
     try {
@@ -24,6 +31,7 @@ const BookDetails = () => {
       await setDoc(doc(shelfCollectionRef, bookId), { bookId });
 
       console.log("Book added to shelf successfully!");
+      setIsSnackbarOpen(true);
     } catch (error) {
       console.log("Error adding book to shelf:", error);
     }
@@ -98,6 +106,15 @@ const BookDetails = () => {
         <p>Loading book details...</p>
       )}
       <button onClick={handleAddToShelf}>Add to Shelf</button>
+      <Snackbar
+        open={isSnackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert onClose={handleSnackbarClose} severity="success">
+          Book added to shelf!
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

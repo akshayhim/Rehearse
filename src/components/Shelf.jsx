@@ -7,6 +7,7 @@ import { collection, getDocs, doc } from "firebase/firestore";
 const Shelf = () => {
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const fetchShelfBooks = async () => {
@@ -19,8 +20,12 @@ const Shelf = () => {
     
         if (!user) {
           // User not logged in, handle the error
+          setIsLoggedIn(false);
+          setIsLoading(false);
           return;
         }
+    
+        setIsLoggedIn(true);
     
         const userRef = doc(db, "users", user.uid);
         const booksRef = collection(userRef, "Shelf");
@@ -85,7 +90,13 @@ const Shelf = () => {
   return (
     <div>
       <h2>Your Shelf</h2>
-      {books.length > 0 ? (
+      {!isLoggedIn && (
+        <p>You must be logged in to add books to your shelf.</p>
+      )}
+      {isLoggedIn && books.length === 0 && (
+        <p>Your shelf is empty.</p>
+      )}
+      {books.length > 0 &&
         books
           .filter((book) => book !== null)
           .map((book, index) => (
@@ -93,7 +104,7 @@ const Shelf = () => {
               <h3>{book.title}</h3>
               {book.covers && book.covers.length > 0 && (
                 <img
-                  src={`https://covers.openlibrary.org/b/id/${book.covers[0]}-S.jpg`}
+                  src={`https://covers.openlibrary.org/b/id/${book.covers[0]}-M.jpg`}
                   alt="Book Cover"
                 />
               )}
@@ -104,12 +115,10 @@ const Shelf = () => {
                   : "Unknown"}
               </p>
             </div>
-          ))
-      ) : (
-        <p>Your shelf is empty.</p>
-      )}
+          ))}
     </div>
   );
+  
 };
 
 export default Shelf;
