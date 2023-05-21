@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Searchbox from './homePage/SearchBar'
 
 const SearchResults = () => {
   const [searchResults, setSearchResults] = useState([]);
@@ -32,6 +33,7 @@ const SearchResults = () => {
 
   return (
     <div>
+      <Searchbox />
       <h1>Search Results</h1>
       {searchResults && searchResults.length > 0 ? (
         searchResults.map((result) => (
