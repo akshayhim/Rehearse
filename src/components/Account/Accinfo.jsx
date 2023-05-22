@@ -10,7 +10,6 @@ export default function Accinfo() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
-        // User is logged in
         const usersCollectionRef = collection(db, "users");
         const q = query(usersCollectionRef, where("email", "==", currentUser.email));
         getDocs(q)
@@ -24,7 +23,6 @@ export default function Accinfo() {
             console.log("Error getting user data: ", error);
           });
       } else {
-        // User is logged out
         setUser(null);
       }
     });

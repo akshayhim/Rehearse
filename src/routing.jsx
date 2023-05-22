@@ -6,6 +6,7 @@ import SearchResults from './components/SearchResults';
 import Account from './components/Account/Accinfo'
 import Shelf from './components/Shelf';
 import BookDetails from './components/BookDetails';
+import SummaryPage from './components/SummaryPage';
 
 export default function Routing() {
     return (
@@ -18,6 +19,7 @@ export default function Routing() {
           <Route path="/signup" element={<Signup/>} />
           <Route path="/account" element={<Account/>} />
           <Route path="/searchresults" element={<SearchResults/>} />  
+          <Route path="/summarypage" element={<SummaryPage />} />  
         </Routes>
       </Router>
     );

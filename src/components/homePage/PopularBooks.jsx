@@ -25,16 +25,6 @@ const PopularBooks = () => {
     }
   };
 
-  // const extractBookId = (bookUrl) => {
-  //   const parts = bookUrl.split("/");
-  //   let bookId = parts[parts.length - 1];
-  //   if (bookId.startsWith("OL")) {
-  //     bookId = bookId.substring(2);
-  //   }
-  //   return bookId;
-  // };
-
-  // Manually enter the links for each book's details page
   const bookDetailsLinks = [
     "/book/OL20796936W",
     "/book/OL17930368W",
@@ -57,7 +47,6 @@ const PopularBooks = () => {
     "/book/OL17202418W",
     "/book/OL15111501W",
     "/book/OL1317211W",
-    // Add more links for the remaining books
   ];
 
   return (

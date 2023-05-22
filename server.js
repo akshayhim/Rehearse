@@ -1,20 +1,19 @@
 import express from 'express';
 import axios from 'axios';
 import cors from 'cors';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
 const app = express();
-const port = 3000;
+const nodeServerPort = 3000;
+const babelCorsServerPort = 4000;
 
 app.use(cors());
-
 
 app.get('/searchresults', async (req, res) => {
   try {
     const { query, type } = req.query;
     let response;
     if (type === 'book') {
-      // console.log("reached here");
-
       response = await axios.get(`https://openlibrary.org/search.json?title=${encodeURIComponent(query)}&lang=eng`);
       res.json(response.data?.docs || []);
     } else if (type === 'author') {
@@ -30,17 +29,26 @@ app.get('/searchresults', async (req, res) => {
       response = await axios.get(`https://openlibrary.org/subjects/${encodeURIComponent(query)}.json`);
       res.json(response.data?.works || []);
     }
-    // else if (!type) {
-    //   response = await axios.get(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&lang=eng`);
-    //   res.json(response.data?.docs || []);
-    //   console.log("reached here");
-    // }
   } catch (error) {
     console.log('Error searching:', error);
     res.status(500).json({ error: 'An error occurred' });
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+// Start your Node server
+app.listen(nodeServerPort, () => {
+  console.log(`Node server is running on port ${nodeServerPort}`);
+});
+
+// Start the Babel/CORS server
+app.use(
+  '/',
+  createProxyMiddleware({
+    target: `http://localhost:${nodeServerPort}`,
+    changeOrigin: true,
+  })
+);
+
+app.listen(babelCorsServerPort, () => {
+  console.log(`Babel/CORS server is running on port ${babelCorsServerPort}`);
 });

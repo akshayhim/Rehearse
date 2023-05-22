@@ -1,23 +1,31 @@
-import { useEffect, useState } from "react";
-import { db, auth } from "./../firebase";
-import axios from "axios";
-import { onAuthStateChanged } from "firebase/auth";
-import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
+import { useEffect, useState } from 'react';
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+} from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth, db } from './../firebase';
+import axios from 'axios';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+// import { useNavigate } from 'react-router-dom';
+// import { sendMessageToChatGPT } from '../api';
 
 const Shelf = () => {
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  
 
   const handleSnackbarOpen = () => {
     setSnackbarOpen(true);
   };
-  
+
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
-  };  
+  };
 
   const fetchShelfBooks = async () => {
     try {
@@ -28,17 +36,15 @@ const Shelf = () => {
       });
 
       if (!user) {
-        // User not logged in, handle the error
         return;
       }
 
-      const userRef = doc(db, "users", user.uid);
-      const booksRef = collection(userRef, "Shelf");
+      const userRef = doc(db, 'users', user.uid);
+      const booksRef = collection(userRef, 'Shelf');
       const booksSnapshot = await getDocs(booksRef);
 
       const bookIds = booksSnapshot.docs.map((doc) => doc.id);
 
-      // Fetch book details for each book in the shelf
       const bookDataPromises = bookIds.map((bookId) =>
         fetchBookDetails(bookId)
       );
@@ -65,9 +71,9 @@ const Shelf = () => {
       );
 
       setBooks(booksWithAuthors);
-      setIsLoading(false); // Set loading to false after fetching data
+      setIsLoading(false); 
     } catch (error) {
-      console.log("Error fetching shelf books:", error);
+      console.log('Error fetching shelf books:', error);
     }
   };
 
@@ -78,7 +84,7 @@ const Shelf = () => {
   const fetchBookDetails = async (bookId) => {
     try {
       if (!bookId) {
-        console.log("Invalid bookId:", bookId);
+        console.log('Invalid bookId:', bookId);
         return null;
       }
       const response = await axios.get(
@@ -86,7 +92,7 @@ const Shelf = () => {
       );
       return response.data;
     } catch (error) {
-      console.log("Error fetching book details:", error);
+      console.log('Error fetching book details:', error);
       return null;
     }
   };
@@ -95,36 +101,34 @@ const Shelf = () => {
     try {
       const user = auth.currentUser;
       if (!user) {
-        // User not logged in, handle the error
         return;
       }
-  
-      console.log("Removing book with ID:", bookId);
-  
+
+      console.log('Removing book with ID:', bookId);
+
       if (!bookId) {
-        console.log("Book ID is empty or undefined!");
+        console.log('Book ID is empty or undefined!');
         return;
       }
-  
-      const userRef = doc(db, "users", user.uid);
-      const shelfCollectionRef = collection(userRef, "Shelf");
+
+      const userRef = doc(db, 'users', user.uid);
+      const shelfCollectionRef = collection(userRef, 'Shelf');
       const bookDocRef = doc(shelfCollectionRef, bookId.split('/')[1]);
-  
+
       await deleteDoc(bookDocRef);
-  
+
       setBooks((prevBooks) =>
         prevBooks.filter((book) => book.id !== bookId)
       );
-  
-      console.log("Book removed from shelf successfully!");
-  
-      window.location.reload(); // Reload the page after removing the book
+
+      console.log('Book removed from shelf successfully!');
+
+      window.location.reload();
       handleSnackbarOpen();
     } catch (error) {
-      console.log("Error removing book from shelf:", error);
+      console.log('Error removing book from shelf:', error);
     }
-  };  
-  
+  };
 
   if (isLoading) {
     return <p>Loading shelf...</p>;
@@ -137,7 +141,7 @@ const Shelf = () => {
         books
           .filter((book) => book !== null && !book.removed)
           .map((book) => {
-            console.log("Book:", book); // Add this line to debug
+            console.log('Book:', book);
             const bookId = book.key.substring(3);
             return (
               <div key={bookId}>
@@ -149,28 +153,38 @@ const Shelf = () => {
                   />
                 )}
                 <p>
-                  <strong>Written by:</strong>{" "}
+                  <strong>Written by:</strong>{' '}
                   {book.authors && book.authors.length > 0
-                    ? book.authors.map((author) => author.name).join(", ")
-                    : "Unknown"}
+                    ? book.authors.map((author) => author.name).join(', ')
+                    : 'Unknown'}
                 </p>
-                <button onClick={() => handleRemoveFromShelf(bookId)}>Remove from shelf</button>
-
-                {console.log("Book ID:", bookId)}
+                {/* <button onClick={() => generateSummary(book)}>
+                  Generate Summary
+                </button> */}
+                <button onClick={() => handleRemoveFromShelf(bookId)}>
+                  Remove from Shelf
+                </button>
               </div>
             );
           })
       ) : (
         <p>Your shelf is empty.</p>
       )}
-       <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleSnackbarClose}>
-        <MuiAlert onClose={handleSnackbarClose} severity="success" sx={{ width: "100%" }}>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={handleSnackbarClose}
+          severity="success"
+        >
           Book removed from shelf!
         </MuiAlert>
       </Snackbar>
-      
     </div>
-    
   );
 };
 

@@ -5,12 +5,30 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
+import { sendMessageToChatGPT } from '../api';
+import { useNavigate } from 'react-router-dom';
 
 const BookDetails = () => {
   const { id } = useParams();
   const [book, setBook] = useState(null);
   const [authors, setAuthors] = useState([]);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const generateSummary = async (book) => {
+    const prompt = `Generate a short summary of ${book.title} by ${
+      authors.map((author) => author.name).join(", ")
+    }`;
+    try {
+      const response = await sendMessageToChatGPT(prompt);
+      const summary = response.trim();
+     
+      localStorage.setItem('summary', summary); 
+      navigate('/summarypage'); 
+    } catch (error) {
+      console.log('Error generating summary:', error);
+    }
+  };
 
   const handleSnackbarClose = () => {
     setIsSnackbarOpen(false);
@@ -20,14 +38,14 @@ const BookDetails = () => {
     try {
       const user = auth.currentUser;
       if (!user) {
-        // User not logged in, handle the error
+        
         return;
       }
 
       const userRef = doc(db, "users", user.uid);
       const shelfCollectionRef = collection(userRef, "Shelf");
 
-      // Create the shelf sub-collection and add the bookId document
+      
       await setDoc(doc(shelfCollectionRef, bookId), { bookId });
 
       console.log("Book added to shelf successfully!");
@@ -105,6 +123,7 @@ const BookDetails = () => {
       ) : (
         <p>Loading book details...</p>
       )}
+      <button onClick={() => generateSummary(book)}>Generate Summary</button>
       <button onClick={handleAddToShelf}>Add to Shelf</button>
       <Snackbar
         open={isSnackbarOpen}
