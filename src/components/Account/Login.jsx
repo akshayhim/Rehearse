@@ -5,7 +5,7 @@ import {
   browserLocalPersistence,
   browserSessionPersistence,
 } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth, signInWithPopup, GoogleAuthProvider } from "../../firebase";
 import { Link as Linking, useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -22,6 +22,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import Navbar from "../homePage/Navbar"
 
 const theme = createTheme();
 
@@ -30,6 +31,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState(null);
+  const [googleSignInSuccess, setGoogleSignInSuccess] = useState(false);
 
   const navigate = useNavigate();
 
@@ -38,18 +40,10 @@ export default function Login() {
   };
 
   useEffect(() => {
-    let timeoutId = null;
-
-    if (error) {
-      timeoutId = setTimeout(() => {
-        setError(null);
-      }, 5000);
+    if (googleSignInSuccess) {
+      navigate("/");
     }
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [error]);
+  }, [googleSignInSuccess, navigate]);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -61,7 +55,6 @@ export default function Login() {
       await setPersistence(auth, persistenceType);
 
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/");
     } catch (error) {
       setError("Invalid email or password");
     }
@@ -71,8 +64,24 @@ export default function Login() {
     setRememberMe(event.target.checked);
   };
 
+  const handleGoogleSignIn = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // You can access the user information here and perform further actions
+      console.log(user);
+      setGoogleSignInSuccess(true);
+    } catch (error) {
+      console.log(error);
+      // Handle error if sign-in with Google fails
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
+        <Navbar />
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -123,45 +132,53 @@ export default function Login() {
                 setPassword(event.target.value);
               }}
             />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    value="remember"
-                                    color="primary"
-                                    checked={rememberMe}
-                                    onChange={handleRememberMeChange}
-                                />
-                            }
-                            label="Remember me"
-                        />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                            Log in
-                        </Button>
-                        <Grid container>
-                            <Grid item xs>
-                                <Link href="#" variant="body2">
-                                    Forgot password?
-                                </Link>
-                            </Grid>
-                            <Grid item>
-                                <Linking to="/signup" href="#" variant="body2">
-                                    {"Don't have an account? Sign Up"}
-                                </Linking>
-                            </Grid>
-                        </Grid>
-                    </Box>
-                </Box>
-            </Container>
-            <Snackbar open={error !== null} onClose={handleSnackbarClose}>
-                <Alert severity="error" onClose={handleSnackbarClose}>
-                    {error}
-                </Alert>
-            </Snackbar>
-        </ThemeProvider>
-    );
+            <FormControlLabel
+              control={
+                <Checkbox
+                  value="remember"
+                  color="primary"
+                  checked={rememberMe}
+                  onChange={handleRememberMeChange}
+                />
+              }
+              label="Remember me"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Log in
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Linking to="/signup" href="#" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Linking>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
+      </Container>
+      <Snackbar open={error !== null} onClose={handleSnackbarClose}>
+        <Alert severity="error" onClose={handleSnackbarClose}>
+          {error}
+        </Alert>
+      </Snackbar>
+      <Button
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+        onClick={handleGoogleSignIn}
+      >
+        Log in with Google
+      </Button>
+    </ThemeProvider>
+  );
 }

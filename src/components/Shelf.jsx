@@ -12,6 +12,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 // import { useNavigate } from 'react-router-dom';
 // import { sendMessageToChatGPT } from '../api';
+import Navbar from "./homePage/Navbar"
 
 const Shelf = () => {
   const [books, setBooks] = useState([]);
@@ -78,6 +79,20 @@ const Shelf = () => {
   };
 
   useEffect(() => {
+    const checkUserSignedIn = async () => {
+      const user = auth.currentUser;
+      if (!user) {
+        setIsLoading(false);
+        return;
+      }
+
+      await fetchShelfBooks();
+    };
+
+    checkUserSignedIn();
+  }, []);
+
+  useEffect(() => {
     fetchShelfBooks();
   }, []);
 
@@ -134,8 +149,13 @@ const Shelf = () => {
     return <p>Loading shelf...</p>;
   }
 
+  if (!auth.currentUser) {
+    return <p>You must sign in to view your shelf.</p>;
+  }
+
   return (
     <div>
+      <Navbar />
       <h2>Your Shelf</h2>
       {books.length > 0 ? (
         books

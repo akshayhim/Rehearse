@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Navbar from './homePage/Navbar'
 
 const SummaryPage = () => {
   const [summary, setSummary] = useState('');
@@ -13,6 +14,7 @@ const SummaryPage = () => {
 
   return (
     <div>
+      <Navbar />
       <h2>Book Summary</h2>
       <p>{summary}</p>
     </div>
