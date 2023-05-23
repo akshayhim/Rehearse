@@ -8,6 +8,7 @@ import Shelf from './components/Shelf';
 import BookDetails from './components/BookDetails';
 import SummaryPage from './components/SummaryPage';
 import Contact from './components/Contact'
+import PasswordReset from './components/Account/PasswordReset'
 
 export default function Routing() {
     return (
@@ -22,6 +23,7 @@ export default function Routing() {
           <Route path="/searchresults" element={<SearchResults/>} />  
           <Route path="/summarypage" element={<SummaryPage />} />  
           <Route path="/contact" element={<Contact />} />  
+          <Route path="/passwordreset" element={<PasswordReset />} />  
         </Routes>
       </Router>
     );

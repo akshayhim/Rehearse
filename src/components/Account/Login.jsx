@@ -13,7 +13,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -55,6 +54,7 @@ export default function Login() {
       await setPersistence(auth, persistenceType);
 
       await signInWithEmailAndPassword(auth, email, password);
+      navigate("/"); 
     } catch (error) {
       setError("Invalid email or password");
     }
@@ -153,9 +153,9 @@ export default function Login() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Linking to="/passwordreset" href="#" variant="body2">
                   Forgot password?
-                </Link>
+                </Linking>
               </Grid>
               <Grid item>
                 <Linking to="/signup" href="#" variant="body2">
