@@ -1,24 +1,19 @@
-import { useEffect, useState } from 'react';
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-} from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth, db } from './../firebase';
-import axios from 'axios';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
-// import { useNavigate } from 'react-router-dom';
-// import { sendMessageToChatGPT } from '../api';
-import Navbar from "./homePage/Navbar"
+import { useEffect, useState } from "react";
+import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth, db } from "./../firebase";
+import axios from "axios";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import { Link, useNavigate } from "react-router-dom";
+import Navbar from "./homePage/Navbar";
 
 const Shelf = () => {
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  
+
+  const navigate = useNavigate();
 
   const handleSnackbarOpen = () => {
     setSnackbarOpen(true);
@@ -40,8 +35,8 @@ const Shelf = () => {
         return;
       }
 
-      const userRef = doc(db, 'users', user.uid);
-      const booksRef = collection(userRef, 'Shelf');
+      const userRef = doc(db, "users", user.uid);
+      const booksRef = collection(userRef, "Shelf");
       const booksSnapshot = await getDocs(booksRef);
 
       const bookIds = booksSnapshot.docs.map((doc) => doc.id);
@@ -59,9 +54,7 @@ const Shelf = () => {
             );
 
             const authorResponses = await Promise.all(authorRequests);
-            const authorData = authorResponses.map(
-              (response) => response.data
-            );
+            const authorData = authorResponses.map((response) => response.data);
             return {
               ...book,
               authors: authorData,
@@ -72,9 +65,9 @@ const Shelf = () => {
       );
 
       setBooks(booksWithAuthors);
-      setIsLoading(false); 
+      setIsLoading(false);
     } catch (error) {
-      console.log('Error fetching shelf books:', error);
+      console.log("Error fetching shelf books:", error);
     }
   };
 
@@ -99,7 +92,7 @@ const Shelf = () => {
   const fetchBookDetails = async (bookId) => {
     try {
       if (!bookId) {
-        console.log('Invalid bookId:', bookId);
+        console.log("Invalid bookId:", bookId);
         return null;
       }
       const response = await axios.get(
@@ -107,7 +100,7 @@ const Shelf = () => {
       );
       return response.data;
     } catch (error) {
-      console.log('Error fetching book details:', error);
+      console.log("Error fetching book details:", error);
       return null;
     }
   };
@@ -119,29 +112,27 @@ const Shelf = () => {
         return;
       }
 
-      console.log('Removing book with ID:', bookId);
+      console.log("Removing book with ID:", bookId);
 
       if (!bookId) {
-        console.log('Book ID is empty or undefined!');
+        console.log("Book ID is empty or undefined!");
         return;
       }
 
-      const userRef = doc(db, 'users', user.uid);
-      const shelfCollectionRef = collection(userRef, 'Shelf');
-      const bookDocRef = doc(shelfCollectionRef, bookId.split('/')[1]);
+      const userRef = doc(db, "users", user.uid);
+      const shelfCollectionRef = collection(userRef, "Shelf");
+      const bookDocRef = doc(shelfCollectionRef, bookId.split("/")[1]);
 
       await deleteDoc(bookDocRef);
 
-      setBooks((prevBooks) =>
-        prevBooks.filter((book) => book.id !== bookId)
-      );
+      setBooks((prevBooks) => prevBooks.filter((book) => book.id !== bookId));
 
-      console.log('Book removed from shelf successfully!');
+      console.log("Book removed from shelf successfully!");
 
       window.location.reload();
       handleSnackbarOpen();
     } catch (error) {
-      console.log('Error removing book from shelf:', error);
+      console.log("Error removing book from shelf:", error);
     }
   };
 
@@ -161,29 +152,31 @@ const Shelf = () => {
         books
           .filter((book) => book !== null && !book.removed)
           .map((book) => {
-            console.log('Book:', book);
-            const bookId = book.key.substring(3);
+            console.log("Book:", book);
+            const bookId = book.key.split('/').pop();  // Remove the incorrect prefix
             return (
               <div key={bookId}>
-                <h3>{book.title}</h3>
-                {book.covers && book.covers.length > 0 && (
-                  <img
-                    src={`https://covers.openlibrary.org/b/id/${book.covers[0]}-M.jpg`}
-                    alt="Book Cover"
-                  />
-                )}
-                <p>
-                  <strong>Written by:</strong>{' '}
-                  {book.authors && book.authors.length > 0
-                    ? book.authors.map((author) => author.name).join(', ')
-                    : 'Unknown'}
-                </p>
-                {/* <button onClick={() => generateSummary(book)}>
-                  Generate Summary
-                </button> */}
-                <button onClick={() => handleRemoveFromShelf(bookId)}>
-                  Remove from Shelf
-                </button>
+                <Link to={`/book/${bookId}`}>
+                  <h3>{book.title}</h3>
+                  {book.covers && book.covers.length > 0 && (
+                    <img
+                      src={`https://covers.openlibrary.org/b/id/${book.covers[0]}-M.jpg`}
+                      alt="Book Cover"
+                    />
+                  )}
+                  <p>
+                    <strong>Written by:</strong>{" "}
+                    {book.authors && book.authors.length > 0
+                      ? book.authors.map((author) => author.name).join(", ")
+                      : "Unknown"}
+                  </p>
+                  {/* <button onClick={() => generateSummary(book)}>
+                Generate Summary
+              </button> */}
+                  <button onClick={() => handleRemoveFromShelf(bookId)}>
+                    Remove from Shelf
+                  </button>
+                </Link>
               </div>
             );
           })

@@ -7,6 +7,7 @@ import { collection, doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { sendMessageToChatGPT } from '../api';
 import { useNavigate } from 'react-router-dom';
+import Navbar from "./homePage/Navbar"
 
 const BookDetails = () => {
   const { id } = useParams();
@@ -87,6 +88,7 @@ const BookDetails = () => {
 
   return (
     <div>
+      <Navbar />
       <h1>Book Details</h1>
       {book ? (
         <div>
