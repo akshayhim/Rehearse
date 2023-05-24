@@ -1,3 +1,4 @@
+
 .book-container{
   display: flex;
   justify-content: space-evenly;
@@ -6,8 +7,9 @@
 }
 
 .book-cover{
-  width: 240px;
-  height: 450px;
+  margin: 0;
+  width: 150px;
+  height: 280px;
   border-radius: 4%;
   box-shadow: 0px 50px 85px 70px black;
   transition: all .3s ease;
@@ -16,7 +18,7 @@
 
 
 .book-card:hover .book-cover{
-  width: 260px;
+  width: 170px;
 }
 
 .overlay {

@@ -4,7 +4,7 @@ import Routes from './routing';
 function App() {
 
   return (
-    <div>
+    <div className='mainbg'>
       <Routes />
       {/* <h1>test</h1> */}
     </div>

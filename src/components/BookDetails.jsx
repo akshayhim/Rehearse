@@ -17,7 +17,7 @@ const BookDetails = () => {
   const navigate = useNavigate();
 
   const generateSummary = async (book) => {
-    const prompt = `Generate a short summary of ${book.title} by ${
+    const prompt = `Generate a super long summary of ${book.title} by ${
       authors.map((author) => author.name).join(", ")
     }`;
     try {
@@ -94,7 +94,7 @@ const BookDetails = () => {
         <div>
           {book.covers && book.covers.length > 0 && (
             <img
-              src={`https://covers.openlibrary.org/b/id/${book.covers[0]}-L.jpg`}
+              src={`https://covers.openlibrary.org/b/id/${book.covers[0]}-M.jpg`}
               alt="Book Cover"
             />
           )}

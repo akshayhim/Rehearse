@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Container, FormControl, FormControlLabel, Input, Radio, RadioGroup, Typography } from '@mui/material';
+import { Box, Button, Container, FormControl, FormControlLabel, Input, Radio, RadioGroup } from '@mui/material';
+// import "./Home.css";
 
 const SearchBar = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -33,12 +34,13 @@ const SearchBar = () => {
   return (
     <Container maxWidth="sm">
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '50vh', justifyContent: 'center' }}>
-        <Typography variant="h4" component="h1" gutterBottom>
+        {/* <Typography variant="h4" component="h1" gutterBottom>
           Book Search
-        </Typography>
-        <form onSubmit={handleSearch}>
+        </Typography> */}
+        <form onSubmit={handleSearch} >
           <Box sx={{ mb: 2 }}>
             <Input
+              sx={{ color: "white" }}
               type="text"
               value={searchQuery}
               onChange={handleChange}
@@ -46,14 +48,14 @@ const SearchBar = () => {
               placeholder="Search for books, authors, or categories"
             />
           </Box>
-          <FormControl component="fieldset">
-            <RadioGroup row value={searchType} onChange={handleSearchTypeChange}>
-              <FormControlLabel value="book" control={<Radio />} label="Book" />
-              <FormControlLabel value="author" control={<Radio />} label="Author" />
-              <FormControlLabel value="category" control={<Radio />} label="Category" />
+          <FormControl component="fieldset" sx={{ color: "white" }}>
+            <RadioGroup row value={searchType} onChange={handleSearchTypeChange} >
+              <FormControlLabel value="book" control={<Radio sx={{ color:"#f5f5f5", }} /> } label="Book" />
+              <FormControlLabel value="author" control={<Radio sx={{ color:"#f5f5f5" }} />} label="Author" />
+              <FormControlLabel value="category" control={<Radio sx={{ color:"#f5f5f5" }} />} label="Category" />
             </RadioGroup>
           </FormControl>
-          <Button type="submit" variant="contained" color="primary">
+          <Button sx={{ backgroundColor:"#a69fff" }} type="submit" variant="contained" color="primary">
             Search
           </Button>
         </form>
