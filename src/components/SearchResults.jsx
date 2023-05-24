@@ -66,6 +66,7 @@ const SearchResults = () => {
                     <strong>First Publish Year:</strong> {result.first_publish_year}
                   </p>
                 )}
+                <hr />
               </div>
             ))
           ) : (

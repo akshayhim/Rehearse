@@ -5,15 +5,16 @@ import { auth, db } from "./../firebase";
 import axios from "axios";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Navbar from "./homePage/Navbar";
+import { Typography } from '@mui/material';
 
 const Shelf = () => {
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleSnackbarOpen = () => {
     setSnackbarOpen(true);
@@ -137,11 +138,21 @@ const Shelf = () => {
   };
 
   if (isLoading) {
-    return <p>Loading shelf...</p>;
+    return( 
+      <> 
+      <Navbar />
+        <p>Loading shelf...</p>;
+        </>
+    )
   }
 
   if (!auth.currentUser) {
-    return <p>You must sign in to view your shelf.</p>;
+    return( 
+      <>
+      <Navbar />
+    <Typography variant="h7"component="h2" gutterBottom sx={{color:"#f5f5f5", position: "relative", top:"300px", textAlign:"center"}}>You must sign in to view your shelf.</Typography>
+    </>
+    )
   }
 
   return (
