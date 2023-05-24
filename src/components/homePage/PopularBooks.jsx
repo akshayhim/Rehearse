@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 // import "./Home.css";
+import './popularbooks.css'
 
 
 const PopularBooks = () => {

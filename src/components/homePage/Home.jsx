@@ -1,4 +1,4 @@
-import PopularBooks from "./popularBooks";
+import PopularBooks from "./PopularBooks";
 import Searchbox from "./Searchbar"
 import Navbar from "./Navbar"
 import Footer from "./Footer";

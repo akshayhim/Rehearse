@@ -8,6 +8,7 @@ import { auth, db } from "../firebase";
 import { sendMessageToChatGPT } from '../api';
 import { useNavigate } from 'react-router-dom';
 import Navbar from "./homePage/Navbar"
+import './bookdetails.css'
 
 const BookDetails = () => {
   const { id } = useParams();
@@ -87,34 +88,35 @@ const BookDetails = () => {
   }, [id]);
 
   return (
-    <div>
+    <div className="blockBook">
       <Navbar />
-      <h1>Book Details</h1>
+      {/* <h1>Book Details</h1> */}
       {book ? (
         <div>
           {book.covers && book.covers.length > 0 && (
             <img
               src={`https://covers.openlibrary.org/b/id/${book.covers[0]}-M.jpg`}
               alt="Book Cover"
+              className="book-photo"
             />
           )}
-          <h2>{book.title}</h2>
+          <h2 className="bookTitle">{book.title}</h2>
           {authors.length > 0 && (
             <div>
-              <p>
+              <p className="bookAuthor">
                 <strong>Written by: </strong>
                 {authors.map((author) => author.name).join(", ")}
               </p>
             </div>
           )}
           {book.first_publish_date && (
-            <p>
+            <p className="bookAuthor">
               <strong>First Published: </strong>
               {book.first_publish_date}
             </p>
           )}
           {book.description || book.subtitle ? (
-            <p>
+            <p className="bookAuthor">
               <strong>Description:</strong>{" "}
               {book.description && typeof book.description !== "string"
                 ? book.description.value.toString()
@@ -125,8 +127,8 @@ const BookDetails = () => {
       ) : (
         <p>Loading book details...</p>
       )}
-      <button onClick={() => generateSummary(book)}>Generate Summary</button>
-      <button onClick={handleAddToShelf}>Add to Shelf</button>
+      <button onClick={() => generateSummary(book)} className="styleButton">Generate Summary</button>
+      <button onClick={handleAddToShelf} className="styleButton">Add to Shelf</button>
       <Snackbar
         open={isSnackbarOpen}
         autoHideDuration={3000}

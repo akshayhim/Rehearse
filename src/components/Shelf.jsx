@@ -8,6 +8,9 @@ import MuiAlert from "@mui/material/Alert";
 import { Link } from "react-router-dom";
 import Navbar from "./homePage/Navbar";
 import { Typography } from '@mui/material';
+import './shelf.css';
+// import { useNavigate } from 'react-router-dom';
+// import { sendMessageToChatGPT } from '../api';
 
 const Shelf = () => {
   const [books, setBooks] = useState([]);
@@ -141,7 +144,7 @@ const Shelf = () => {
     return( 
       <> 
       <Navbar />
-        <p>Loading shelf...</p>;
+        <p className='loadingText'>Loading shelf...</p>;
         </>
     )
   }
@@ -155,45 +158,46 @@ const Shelf = () => {
     )
   }
 
+
   return (
     <div>
       <Navbar />
       <h2>Your Shelf</h2>
-      {books.length > 0 ? (
-        books
-          .filter((book) => book !== null && !book.removed)
-          .map((book) => {
-            console.log("Book:", book);
-            const bookId = book.key.split('/').pop();  // Remove the incorrect prefix
-            return (
-              <div key={bookId}>
-                <Link to={`/book/${bookId}`}>
-                  <h3>{book.title}</h3>
+      <div className="book-block">
+        {books.length > 0 ? (
+          books
+            .filter((book) => book !== null && !book.removed)
+            .map((book) => {
+              console.log('Book:', book);
+              const bookId = book.key.split('/').pop();
+              return (
+                <div key={bookId} >
+                  <Link to={`/book/${bookId}`}>
+                  <h3 className='bookTitle'>{book.title}</h3>
                   {book.covers && book.covers.length > 0 && (
                     <img
                       src={`https://covers.openlibrary.org/b/id/${book.covers[0]}-M.jpg`}
                       alt="Book Cover"
+                      className="book-photo"
                     />
                   )}
-                  <p>
-                    <strong>Written by:</strong>{" "}
+                  <p className='bookAuthor'>
+                    <strong>Written by:</strong>{' '}
                     {book.authors && book.authors.length > 0
-                      ? book.authors.map((author) => author.name).join(", ")
-                      : "Unknown"}
+                      ? book.authors.map((author) => author.name).join(', ')
+                      : 'Unknown'}
                   </p>
-                  {/* <button onClick={() => generateSummary(book)}>
-                Generate Summary
-              </button> */}
-                  <button onClick={() => handleRemoveFromShelf(bookId)}>
+                  </Link>
+                  <button onClick={() => handleRemoveFromShelf(bookId)} className='removeButton'>
                     Remove from Shelf
                   </button>
-                </Link>
-              </div>
-            );
-          })
-      ) : (
-        <p>Your shelf is empty.</p>
-      )}
+                </div>
+              );
+            })
+        ) : (
+          <p>Your shelf is empty.</p>
+        )}
+      </div>
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}

@@ -1,0 +1,28 @@
+.bg {
+    background-color: #222222;
+    padding: 90px;
+    /* width: 1160px; */
+    position: relative;
+    right: 10px;
+    scroll-behavior: smooth;
+    
+}
+
+.sumheading {
+    position: relative;
+    top: 40px;
+    color: #f5f5f5;
+    text-decoration: underline;
+}
+
+.mainsum {
+    position: relative;
+    top: 80px;
+    font-size: 24px;
+    line-height: 36px;
+    word-spacing: 10px;
+    color: #f5f5f5;
+    font-smooth: always;
+    text-align: justify;
+    /* font-family: merriweather; */
+}
