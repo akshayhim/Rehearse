@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
-import { Snackbar } from "@mui/material";
+import { CircularProgress, Snackbar } from "@mui/material";
 import { Alert } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { sendMessageToChatGPT } from '../api';
-import { useNavigate } from 'react-router-dom';
-import Navbar from "./homePage/Navbar"
-import './bookdetails.css'
+import Navbar from "./homePage/Navbar";
+import './bookdetails.css';
 
 const BookDetails = () => {
   const { id } = useParams();
   const [book, setBook] = useState(null);
   const [authors, setAuthors] = useState([]);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Initialize isLoading as false
   const navigate = useNavigate();
 
   const generateSummary = async (book) => {
@@ -22,6 +22,7 @@ const BookDetails = () => {
       authors.map((author) => author.name).join(", ")
     }`;
     try {
+      setIsLoading(true); // Set isLoading to true when starting summary generation
       const response = await sendMessageToChatGPT(prompt);
       const summary = response.trim();
      
@@ -29,6 +30,8 @@ const BookDetails = () => {
       navigate('/summarypage'); 
     } catch (error) {
       console.log('Error generating summary:', error);
+    } finally {
+      setIsLoading(false); // Set isLoading to false when summary generation is complete
     }
   };
 
@@ -90,7 +93,6 @@ const BookDetails = () => {
   return (
     <div className="blockBook">
       <Navbar />
-      {/* <h1>Book Details</h1> */}
       {book ? (
         <div>
           {book.covers && book.covers.length > 0 && (
@@ -127,8 +129,12 @@ const BookDetails = () => {
       ) : (
         <p>Loading book details...</p>
       )}
-      <button onClick={() => generateSummary(book)} className="styleButton">Generate Summary</button>
-      <button onClick={handleAddToShelf} className="styleButton">Add to Shelf</button>
+      <button onClick={() => generateSummary(book)} className="styleButton">
+        Generate Summary
+      </button>
+      <button onClick={handleAddToShelf} className="styleButton">
+        Add to Shelf
+      </button>
       <Snackbar
         open={isSnackbarOpen}
         autoHideDuration={3000}
@@ -138,6 +144,13 @@ const BookDetails = () => {
           Book added to shelf!
         </Alert>
       </Snackbar>
+      {isLoading && (
+        <div className="loading-overlay">
+          <CircularProgress />
+          <p>Generating summary for this book</p>
+          <p className="small">This may take some time</p>  
+        </div>
+      )}
     </div>
   );
 };

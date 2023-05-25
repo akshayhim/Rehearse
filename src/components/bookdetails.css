@@ -42,5 +42,24 @@
     color: #f5f5f5;
     border-radius: 8%;
     border-color: white;
+    cursor: pointer;
 }
+
+.loading-overlay {
+    color:#f5f5f5;
+    position:relative;
+    left: 00px;
+    bottom: 380px;
+    text-align: center;
+    size: 100px;
+    /* width: 1000px; */
+    font-size: 23px;
+    font-family: 'Raleway', sans-serif;
+    .small {
+        font-size: 17px;
+        position: relative;
+
+    }
+}
+  
   

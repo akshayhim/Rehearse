@@ -14,6 +14,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Navbar from "../homePage/Navbar"
+import Google from "../../assets/icons8-google.svg"
 
 function SignUp() {
   const [email, setEmail] = useState("");
@@ -69,7 +70,7 @@ function SignUp() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <Avatar sx={{ m: 1, bgcolor: "#1b1835" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -141,7 +142,7 @@ function SignUp() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2,  backgroundColor:"#1b1835" }}
               onClick={handleRegisterAndCreateProfile}
             >
               Sign Up
@@ -160,10 +161,11 @@ function SignUp() {
         <Button
           fullWidth
           variant="contained"
-          sx={{ mt: 3, mb: 2 }}
+          sx={{ mt: 3, mb: 2, backgroundColor:"#1b1835" }}
           onClick={signInWithGoogle}
         >
-          Sign up with Google
+          <img src={Google} alt="" className="googleLogo"></img>
+        <p>Sign up with Google</p>
         </Button>
       </Container>
     </ThemeProvider>

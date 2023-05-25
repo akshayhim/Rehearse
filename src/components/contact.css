@@ -1,0 +1,13 @@
+.socialIcons{
+    display: flex;
+    column-gap: 30px;
+    position: relative;
+    left: 100px;
+    bottom: 60px;
+    -webkit-filter: invert(100%);
+    filter: invert(90%);
+}
+
+.surroundingDiv {
+    padding: 50px;
+}

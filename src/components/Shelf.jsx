@@ -6,9 +6,10 @@ import axios from "axios";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { Link } from "react-router-dom";
+import Button from "@mui/material/Button";
 import Navbar from "./homePage/Navbar";
-import { Typography } from '@mui/material';
-import './shelf.css';
+import { Typography } from "@mui/material";
+import "./shelf.css";
 // import { useNavigate } from 'react-router-dom';
 // import { sendMessageToChatGPT } from '../api';
 
@@ -16,8 +17,6 @@ const Shelf = () => {
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-  // const navigate = useNavigate();
 
   const handleSnackbarOpen = () => {
     setSnackbarOpen(true);
@@ -28,6 +27,8 @@ const Shelf = () => {
   };
 
   const fetchShelfBooks = async () => {
+    setIsLoading(true); // Set isLoading to true while fetching the shelf books
+
     try {
       const user = await new Promise((resolve) => {
         onAuthStateChanged(auth, (currentUser) => {
@@ -36,6 +37,7 @@ const Shelf = () => {
       });
 
       if (!user) {
+        setIsLoading(false); // Set isLoading to false if user is not signed in
         return;
       }
 
@@ -69,25 +71,12 @@ const Shelf = () => {
       );
 
       setBooks(booksWithAuthors);
-      setIsLoading(false);
     } catch (error) {
       console.log("Error fetching shelf books:", error);
+    } finally {
+      setIsLoading(false); // Set isLoading to false after fetching the shelf books
     }
   };
-
-  useEffect(() => {
-    const checkUserSignedIn = async () => {
-      const user = auth.currentUser;
-      if (!user) {
-        setIsLoading(false);
-        return;
-      }
-
-      await fetchShelfBooks();
-    };
-
-    checkUserSignedIn();
-  }, []);
 
   useEffect(() => {
     fetchShelfBooks();
@@ -113,6 +102,7 @@ const Shelf = () => {
     try {
       const user = auth.currentUser;
       if (!user) {
+        // User not logged in, handle the error
         return;
       }
 
@@ -125,7 +115,7 @@ const Shelf = () => {
 
       const userRef = doc(db, "users", user.uid);
       const shelfCollectionRef = collection(userRef, "Shelf");
-      const bookDocRef = doc(shelfCollectionRef, bookId.split("/")[1]);
+      const bookDocRef = doc(shelfCollectionRef, bookId);
 
       await deleteDoc(bookDocRef);
 
@@ -133,7 +123,7 @@ const Shelf = () => {
 
       console.log("Book removed from shelf successfully!");
 
-      window.location.reload();
+      window.location.reload(); // Reload the page after removing the book
       handleSnackbarOpen();
     } catch (error) {
       console.log("Error removing book from shelf:", error);
@@ -141,23 +131,46 @@ const Shelf = () => {
   };
 
   if (isLoading) {
-    return( 
-      <> 
-      <Navbar />
-        <p className='loadingText'>Loading shelf...</p>;
-        </>
-    )
+    return (
+      <>
+        <Navbar />
+        <Typography
+          variant="h7"
+          component="h2"
+          gutterBottom
+          sx={{
+            color: "#f5f5f5",
+            position: "relative",
+            top: "300px",
+            textAlign: "center",
+          }}
+        >
+          Loading shelf...
+        </Typography>
+      </>
+    );
   }
 
   if (!auth.currentUser) {
-    return( 
+    return (
       <>
-      <Navbar />
-    <Typography variant="h7"component="h2" gutterBottom sx={{color:"#f5f5f5", position: "relative", top:"300px", textAlign:"center"}}>You must sign in to view your shelf.</Typography>
-    </>
-    )
+        <Navbar />
+        <Typography
+          variant="h7"
+          component="h2"
+          gutterBottom
+          sx={{
+            color: "#f5f5f5",
+            position: "relative",
+            top: "300px",
+            textAlign: "center",
+          }}
+        >
+          You must sign in to view your shelf.
+        </Typography>
+      </>
+    );
   }
-
 
   return (
     <div>
@@ -168,34 +181,57 @@ const Shelf = () => {
           books
             .filter((book) => book !== null && !book.removed)
             .map((book) => {
-              console.log('Book:', book);
-              const bookId = book.key.split('/').pop();
+              console.log("Book:", book);
+              const bookId = book.key.split("/").pop();
               return (
-                <div key={bookId} >
+                <div key={bookId}>
                   <Link to={`/book/${bookId}`}>
-                  <h3 className='bookTitle'>{book.title}</h3>
-                  {book.covers && book.covers.length > 0 && (
-                    <img
-                      src={`https://covers.openlibrary.org/b/id/${book.covers[0]}-M.jpg`}
-                      alt="Book Cover"
-                      className="book-photo"
-                    />
-                  )}
-                  <p className='bookAuthor'>
-                    <strong>Written by:</strong>{' '}
-                    {book.authors && book.authors.length > 0
-                      ? book.authors.map((author) => author.name).join(', ')
-                      : 'Unknown'}
-                  </p>
+                    <h3 className="bookTitle">{book.title}</h3>
+                    {book.covers && book.covers.length > 0 && (
+                      <img
+                        src={`https://covers.openlibrary.org/b/id/${book.covers[0]}-M.jpg`}
+                        alt="Book Cover"
+                        className="book-photo"
+                      />
+                    )}
+                    <p className="bookAuthor">
+                      <strong>Written by:</strong>{" "}
+                      {book.authors && book.authors.length > 0
+                        ? book.authors.map((author) => author.name).join(", ")
+                        : "Unknown"}
+                    </p>
                   </Link>
-                  <button onClick={() => handleRemoveFromShelf(bookId)} className='removeButton'>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{
+                      mt: 3,
+                      mb: 2,
+                      color: "#f5f5f5",
+                      backgroundColor: "#1b1835",
+                    }}
+                    onClick={() => handleRemoveFromShelf(bookId)}
+                  >
                     Remove from Shelf
-                  </button>
+                  </Button>
                 </div>
               );
             })
         ) : (
-          <p>Your shelf is empty.</p>
+          <Typography
+            variant="h7"
+            component="h2"
+            gutterBottom
+            sx={{
+              color: "#f5f5f5",
+              position: "relative",
+              top: "220px",
+              left:"530px",
+              textAlign: "center"
+            }}
+          >
+            Your shelf is empty
+          </Typography>
         )}
       </div>
       <Snackbar

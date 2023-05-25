@@ -45,7 +45,7 @@ a{
     display: flex;
     flex-direction: row;
     position: relative;
-    top: 0px;
+    column-gap: 5px;
 }
 
 .socialmedia img{
@@ -97,7 +97,7 @@ hr{
 }
 
 .sb_footer-copyright p{
-    font-size: 13px;
+    font-size: 16px;
     line-height: 15px;
     color: rgb(255, 255, 255);
     font-weight: 600;

@@ -1,8 +1,8 @@
 .book-block {
     display: flex;
-    justify-content: center;
     flex-wrap: wrap;
     gap: 1.35em;
+    text-align: center;
 }
   
 .book-block > div {

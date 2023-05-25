@@ -1,0 +1,17 @@
+.googleLogo {
+    position: relative;
+    top: 0px;
+    right: 10px;
+    width: 34 px;
+}
+
+.googleDiv {
+    display: flex;
+    height: 40px;
+}
+
+.googleDiv p {
+    position: relative;
+    bottom: 7px;
+    color: #f5f5f5;
+}

@@ -22,6 +22,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import Navbar from "../homePage/Navbar"
+import Google from "../../assets/icons8-google.svg"
+import './login.css'
 
 const theme = createTheme();
 
@@ -92,10 +94,10 @@ export default function Login() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <Avatar sx={{ m: 1, bgcolor: "#1b1835" }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h5" >
             Log in
           </Typography>
           <Box
@@ -147,7 +149,7 @@ export default function Login() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, color: "#f5f5f5",  backgroundColor:"#1b1835" }}
             >
               Log in
             </Button>
@@ -174,10 +176,13 @@ export default function Login() {
       <Button
         fullWidth
         variant="contained"
-        sx={{ mt: 3, mb: 2 }}
+        sx={{ mt: 3, mb: 2, width:"400px", position:"relative", left:"440px", top:"20px", backgroundColor:"#1b1835" }}
         onClick={handleGoogleSignIn}
       >
-        Log in with Google
+        <div className="googleDiv">
+        <img src={Google} alt="" className="googleLogo"></img>
+        <p>Log in with Google</p>
+        </div>
       </Button>
     </ThemeProvider>
   );
