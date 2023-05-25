@@ -1,7 +1,11 @@
+
+
 import express from 'express';
 import axios from 'axios';
 import cors from 'cors';
 import { createProxyMiddleware } from 'http-proxy-middleware';
+// import { functions } from 'firebase-function';
+
 
 const app = express();
 const nodeServerPort = 3000;
@@ -52,3 +56,7 @@ app.use(
 app.listen(babelCorsServerPort, () => {
   console.log(`Babel/CORS server is running on port ${babelCorsServerPort}`);
 });
+
+
+
+// exports.api = functions.https.onRequest(app)

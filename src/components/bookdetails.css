@@ -55,11 +55,12 @@
     /* width: 1000px; */
     font-size: 23px;
     font-family: 'Raleway', sans-serif;
-    .small {
-        font-size: 17px;
-        position: relative;
-
-    }
 }
-  
+
+.loading-overlay > .small {
+    font-size: 17px;
+    position: relative;
+
+}
+
   
