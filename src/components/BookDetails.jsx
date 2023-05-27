@@ -36,10 +36,12 @@ const BookDetails = () => {
   };
 
   const handleSnackbarClose = () => {
+    console.log("Snackbar close button clicked");
     setIsSnackbarOpen(false);
   };
 
   const addToShelf = async (bookId) => {
+    console.log("Add to shelf button clicked"); 
     try {
       const user = auth.currentUser;
       if (!user) {
