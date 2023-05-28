@@ -29,7 +29,7 @@ Suggest related book summaries based on the user's reading history
 Summary Progress Tracking
 
 
-Contributing: Contributions are welcome from anyone interested in helping to improve the application.
+**Contributing**: Contributions are welcome from anyone interested in helping to improve the application.
 
 
-License: Rehearse is licensed under the [MIT License](	).
+**License**: Rehearse is licensed under the [MIT License](	).
