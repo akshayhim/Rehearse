@@ -24,8 +24,11 @@ Rehearse is a web application that allows users to quickly get the main ideas an
 
 
 **Future Feature Ideas**:
+
 Allow users to rate and review book summaries
+
 Suggest related book summaries based on the user's reading history
+
 Summary Progress Tracking
 
 
