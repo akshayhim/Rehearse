@@ -22,6 +22,7 @@ Rehearse is a web application that allows users to quickly get the main ideas an
 > Note: To use the search functionality, fork the project in your local system and run the nodejs server and babel/cors server using the command `node server.js`. This will run both servers locally, and you can then use the search function as needed.
 
 
+
 **Future Feature Ideas**:
 Allow users to rate and review book summaries
 Suggest related book summaries based on the user's reading history
